@@ -21,6 +21,9 @@ example.com {
 			secret_key $AWS_SECRET_KEY
 			region $AWS_REGION
 			service $AWS_SERVICE
+
+			# other 'http' transport directives per:
+			# https://caddyserver.com/docs/caddyfile/directives/reverse_proxy#the-http-transport 
 		}
 	}
 }

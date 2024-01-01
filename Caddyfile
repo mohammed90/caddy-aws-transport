@@ -1,0 +1,11 @@
+localhost {
+	reverse_proxy https://s3.awsservice.com {
+		transport aws {
+			access_id abcd
+			secret_key abcd
+			region abcd
+			service abcd
+			dial_timeout 5m
+		}
+	}
+}
