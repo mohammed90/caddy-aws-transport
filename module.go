@@ -1,7 +1,11 @@
 package awstransport
 
 import (
+	"bytes"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"net/http"
 
 	"github.com/BishopFox/aws-signing/signing"
@@ -49,6 +53,12 @@ func (a *AWSTransport) Provision(ctx caddy.Context) error {
 
 // RoundTrip implements http.RoundTripper.
 func (a *AWSTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	hash, err := hashPayload(req)
+	if err != nil {
+		return nil, fmt.Errorf("error hashing payload: %s", err)
+	}
+	req.Header.Set("x-amz-content-sha256", hash)
+
 	replacer := req.Context().Value(caddy.ReplacerCtxKey).(*caddy.Replacer)
 	replacer.ReplaceKnown(a.Service, "")
 	t := signing.NewTransport(
@@ -62,6 +72,21 @@ func (a *AWSTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	)
 	t.BaseTransport = a.HTTPTransport
 	return t.RoundTrip(req)
+}
+
+func hashPayload(req *http.Request) (string, error) {
+	var sum [32]byte
+	if req.Body == nil {
+		sum = sha256.Sum256(nil)
+	} else {
+		d, err := io.ReadAll(req.Body)
+		if err != nil {
+			return "", fmt.Errorf("error reading http body to sign: %s", err)
+		}
+		req.Body = io.NopCloser(bytes.NewReader(d))
+		sum = sha256.Sum256(d)
+	}
+	return hex.EncodeToString(sum[:]), nil
 }
 
 func (a *AWSTransport) UnmarshalCaddyfile(d *caddyfile.Dispenser) error {
