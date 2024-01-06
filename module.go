@@ -20,12 +20,22 @@ func init() {
 	caddy.RegisterModule(new(AWSTransport))
 }
 
+// The AWS transport module injects the AWS V4 Signature for requests proxied to AWS services.
+// It also implicitly calculates and sets the `x-amz-content-sha256` header value.
 type AWSTransport struct {
 	*reverseproxy.HTTPTransport `json:"transport,omitempty"`
-	AccessKeyID                 string `json:"access_key_id,omitempty"`
-	SecretAccessKey             string `json:"secret_access_key,omitempty"`
-	Region                      string `json:"region,omitempty"`
-	Service                     string `json:"service,omitempty"`
+
+	// One part of the AWS security credentials identifying the service user
+	AccessKeyID string `json:"access_key_id,omitempty"`
+
+	// The other part of the AWS security credentials
+	SecretAccessKey string `json:"secret_access_key,omitempty"`
+
+	// The AWS region, e.g. us-east-2
+	Region string `json:"region,omitempty"`
+
+	// The upstream AWS service
+	Service string `json:"service,omitempty"`
 }
 
 // CaddyModule implements caddy.Module.
