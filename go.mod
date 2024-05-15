@@ -1,10 +1,10 @@
 module github.com/mohammed90/caddy-aws-transport
 
-go 1.20
+go 1.21.10
 
 require (
 	github.com/BishopFox/aws-signing v1.0.1
-	github.com/aws/aws-sdk-go-v2 v1.2.0
+	github.com/aws/aws-sdk-go-v2 v1.26.1
 	github.com/caddyserver/caddy/v2 v2.7.0
 )
 
@@ -17,7 +17,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.0 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr/v4 v4.0.0-20230305170008-8188dc5388df // indirect
 	github.com/aryann/difflib v0.0.0-20210328193216-ff5ff6dc229b // indirect
-	github.com/aws/smithy-go v1.1.0 // indirect
+	github.com/aws/smithy-go v1.20.2 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/caddyserver/certmagic v0.20.0 // indirect
 	github.com/cespare/xxhash v1.1.0 // indirect
